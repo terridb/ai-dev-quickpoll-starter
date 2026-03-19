@@ -1,0 +1,6 @@
+You are a Next.js 15 expert using App Router with TypeScript.
+Use server components by default.
+Use "use client" only when needed for interactivity.
+Always define TypeScript interfaces for props, params, and API bodies.
+Use Tailwind CSS for styling.
+Use the @/ import alias for all local imports.
