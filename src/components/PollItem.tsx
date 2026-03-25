@@ -4,7 +4,7 @@ import PollItemOption from "@/components/PollItemOption";
 
 type PollItemProps = {
     poll: Poll,
-    onOptionClick?: (option: string) => void
+    onOptionClick?: (option: string, index:number) => void
 }
 
 function PollItem({poll, onOptionClick}: PollItemProps) {

@@ -1,6 +1,7 @@
 'use client'
 
 import {notFound, useParams} from "next/navigation";
+import {useState} from "react";
 import {getPollById, votePoll} from "@/lib/data";
 import VoteForm from "@/components/VoteForm";
 import {Poll} from "@/types";
@@ -13,17 +14,25 @@ export default function PollPage() {
         notFound();
     }
 
-    const poll: Poll | undefined = getPollById(params.id as string);
-
-    if (!poll) {
+    const id = params.id as string;
+    const initialPoll: Poll | undefined = getPollById(id);
+    if (!initialPoll) {
         notFound();
     }
 
-    const onPollItemClick = async (option: string, index:number) => {
-        console.log("Clicked option:", option, index);
+    // Keep poll in React state so vote updates trigger a re-render.
+    const [poll, setPoll] = useState<Poll>(initialPoll);
 
-       votePoll(params.id as string, option);
-    }
+    const onPollItemClick = (option: string, index: number) => {
+        const updated = votePoll(id, index);
+        if (!updated) return;
+
+        // `votePoll` mutates the in-memory object; clone to ensure a new reference.
+        setPoll({
+            ...updated,
+            votes: [...updated.votes],
+        });
+    };
 
     return (
         <div className="max-w-2xl mx-auto">
