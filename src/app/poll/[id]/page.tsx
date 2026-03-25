@@ -1,7 +1,7 @@
 'use client'
 
 import {notFound, useParams} from "next/navigation";
-import {getPollById} from "@/lib/data";
+import {getPollById, votePoll} from "@/lib/data";
 import VoteForm from "@/components/VoteForm";
 import {Poll} from "@/types";
 import PollItem from "@/components/PollItem";
@@ -19,21 +19,17 @@ export default function PollPage() {
         notFound();
     }
 
-    const onPollItemClick = async (option: string) => {
-        console.log("Clicked option:", option);
+    const onPollItemClick = async (option: string, index:number) => {
+        console.log("Clicked option:", option, index);
 
-        const response = await fetch(`/api/polls/${params.id}`, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({optionIndex: option})
-        })
+       votePoll(params.id as string, option);
     }
 
     return (
         <div className="max-w-2xl mx-auto">
             <h1 className="text-2xl font-bold text-gray-900 mb-6">Poll</h1>
             <section>
-                {poll ? <PollItem poll={poll} onClick={onPollItemClick}/> : <p>No poll found!</p>}
+                {poll ? <PollItem poll={poll} onOptionClick={onPollItemClick}/> : <p>No poll found!</p>}
             </section>
             <VoteForm poll={poll}/>
         </div>

@@ -4,10 +4,10 @@ import PollItemOption from "@/components/PollItemOption";
 
 type PollItemProps = {
     poll: Poll,
-    onClick?: (option: string) => void
+    onOptionClick?: (option: string) => void
 }
 
-function PollItem({poll, onClick}: PollItemProps) {
+function PollItem({poll, onOptionClick}: PollItemProps) {
     const totalVotes = (poll: Poll) =>
         poll.votes.reduce((sum, v) => sum + v, 0);
 
@@ -25,8 +25,8 @@ function PollItem({poll, onClick}: PollItemProps) {
                     {poll.options.length} opties · {totalVotes(poll)} stemmen
                 </p>
                 <ul className="flex gap-4">
-                    {poll.options.map((option: string) => (
-                        <PollItemOption option={option} key={option} onClick={onClick}/>
+                    {poll.options.map((option, index) => (
+                        <PollItemOption option={option} key={option} index={index} onClick={onOptionClick}/>
                     ))}
                 </ul>
             </li>

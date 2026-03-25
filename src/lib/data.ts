@@ -31,25 +31,19 @@ export function getPollById(id: string): Poll | undefined {
   return polls.find((poll) => poll.id === id);
 }
 
-export function createPoll(question: string, options: string[]): Poll {
-  const newPoll: Poll = {
-    id: String(nextId++),
-    question,
-    options,
-    votes: new Array(options.length).fill(0),
-  };
-  polls.push(newPoll);
-  return newPoll;
-}
+// export function createPoll(question: string, options: string[]): Poll {
+//   const newPoll: Poll = {
+//     id: String(nextId++),
+//     question,
+//     options,
+//     votes: new Array(options.length).fill(0),
+//   };
+//   polls.push(newPoll);
+//   return newPoll;
+// }
 
-export function votePoll(
-  pollId: string,
-  optionIndex: number
-): Poll | undefined {
-  const poll = polls.find((p) => p.id === pollId);
-  if (!poll || optionIndex < 0 || optionIndex >= poll.options.length) {
-    return undefined;
-  }
-  poll.votes[optionIndex]++;
+export function votePoll(id: string, optionIndex: number | string) {
+  const poll = polls.find((p) => p.id === id);
+  console.log('votePoll', id, optionIndex);
   return poll;
 }
