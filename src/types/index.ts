@@ -1,11 +1,14 @@
 export interface Poll {
-  id: string;
+  id: number;
   question: string;
-  options: string[];
-  votes: number[];
-}
-
-export interface CreatePollBody {
-  question: string;
-  options: string[];
-}
+  created_at: string;
+  options: Option[];
+  }
+  
+  export interface Option {
+  id: number;
+  poll_id: number;
+  text: string;
+  votes: number;
+  created_at: string;
+  }  

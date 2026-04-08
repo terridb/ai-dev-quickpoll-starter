@@ -1,55 +1,42 @@
-import {Poll} from "@/types";
+import { Poll } from "@/types";
+import { supabase } from "./supabase";
 
-export let polls: Poll[] = [
-    {
-        id: "1",
-        question: "Wat is de beste code editor?",
-        options: ["VS Code", "Cursor", "Vim", "WebStorm"],
-        votes: [12, 25, 5, 3],
-    },
-    {
-        id: "2",
-        question: "Wat is de beste programmeertaal?",
-        options: ["TypeScript", "Python", "Rust", "Go"],
-        votes: [18, 15, 8, 4],
-    },
-    {
-        id: "3",
-        question: "Welk framework heeft de toekomst?",
-        options: ["Next.js", "Remix", "Astro", "SvelteKit"],
-        votes: [22, 6, 10, 7],
-    },
-];
+export async function getPolls(): Promise<Poll[]> {
+    const { data, error } = await supabase.from("polls").select("*, options(*)");
 
-let nextId = 4;
+    if (error) {
+        console.error('Error fetching polls:', error);
+        return [];
+    }
 
-export function getPolls(): Poll[] {
-    return polls;
+    console.log('data', data);
+    return data;
 }
 
-export function getPollById(id: string): Poll | undefined {
-    return polls.find((poll) => poll.id === id);
+export async function getPollById(id: number): Promise<Poll | null> {
+    const { data, error } = await supabase.from("polls").select("*, options(*)")
+        .eq("id", id)
+        .single();
+
+    if (error) {
+        console.error('Error fetching poll:', error);
+        return null;
+    }
+
+    console.log('data', data);
+
+    return data;
 }
 
-// export function createPoll(question: string, options: string[]): Poll {
-//   const newPoll: Poll = {
-//     id: String(nextId++),
-//     question,
-//     options,
-//     votes: new Array(options.length).fill(0),
-//   };
-//   polls.push(newPoll);
-//   return newPoll;
-// }
+export async function votePoll(optionId: number) {
+    const { data, error } = await supabase.rpc("vote_option", { option_id: optionId });
 
-export function votePoll(id: string, optionIndex: number) {
-    const poll = polls.find((p) => p.id === id);
+    if (error) {
+        console.error('Error voting poll:', error);
+        return false;
+    }
 
-    if (!poll) return undefined;
-    if (optionIndex < 0 || optionIndex >= poll.options.length) return undefined;
+    console.log('vote data', data);
 
-    poll.votes[optionIndex]++
-
-    console.log('votePoll', poll.votes);
-    return poll;
+    return true;
 }
